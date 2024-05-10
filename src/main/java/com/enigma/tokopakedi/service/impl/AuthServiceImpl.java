@@ -121,6 +121,12 @@ public class AuthServiceImpl implements AuthService {
                 .roles(List.of(roleCustomer, roleAdmin))
                 .build();
         userCredentialRepository.saveAndFlush(userCredential);
+
+        Customer customer = Customer.builder()
+                .userCredential(userCredential)
+                .build();
+        customerService.createCustomer(customer);
+
         return toUserResponse(userCredential);
     }
 }
