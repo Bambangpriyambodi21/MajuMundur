@@ -1,6 +1,9 @@
 package com.enigma.tokopakedi.controller;
 
 import com.enigma.tokopakedi.entity.Merchant;
+import com.enigma.tokopakedi.model.reponse.MerchantResponse;
+import com.enigma.tokopakedi.model.reponse.WebResponse;
+import com.enigma.tokopakedi.model.request.MerchantRequest;
 import com.enigma.tokopakedi.service.MerchantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,14 +19,46 @@ public class MerchantController {
     private final MerchantService merchantService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Merchant merchant){
-        Merchant merchant1 = merchantService.create(merchant);
-        return ResponseEntity.status(HttpStatus.CREATED).body(merchant1);
+    public ResponseEntity<?> create(@RequestBody MerchantRequest merchant){
+        MerchantResponse merchant1 = merchantService.create(merchant);
+        WebResponse<MerchantResponse> response = WebResponse.<MerchantResponse>builder()
+                .message("Data created")
+                .status(HttpStatus.CREATED.getReasonPhrase())
+                .data(merchant1)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
     public ResponseEntity<?> getAll(){
-        List<Merchant> all = merchantService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body(all);
+        List<MerchantResponse> all = merchantService.getAll();
+        WebResponse<List<MerchantResponse>> response = WebResponse.<List<MerchantResponse>>builder()
+                .message("Get all data merchant")
+                .status(HttpStatus.OK.getReasonPhrase())
+                .data(all)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody MerchantRequest merchant){
+        MerchantResponse update = merchantService.update(merchant);
+        WebResponse<MerchantResponse> response = WebResponse.<MerchantResponse>builder()
+                .message("Data updated")
+                .status(HttpStatus.CREATED.getReasonPhrase())
+                .data(update)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id){
+        String delete = merchantService.delete(id);
+        WebResponse<String> response = WebResponse.<String>builder()
+                .message("Data deleted")
+                .status(HttpStatus.OK.getReasonPhrase())
+                .data(delete)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
