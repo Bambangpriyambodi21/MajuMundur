@@ -11,5 +11,6 @@ public interface MerchantService {
     List<MerchantResponse> getAll();
     MerchantResponse update(MerchantRequest merchant);
     String delete(String id);
+    Merchant createNewMerchant(Merchant merchant);
 
 }

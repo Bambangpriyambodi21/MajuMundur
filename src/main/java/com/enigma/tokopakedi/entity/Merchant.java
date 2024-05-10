@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "merchant")
+@Entity(name = "m_merchant")
 public class Merchant {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

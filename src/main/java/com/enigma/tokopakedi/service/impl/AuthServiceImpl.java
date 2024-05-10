@@ -3,8 +3,10 @@ package com.enigma.tokopakedi.service.impl;
 import com.enigma.tokopakedi.constant.ERole;
 import com.enigma.tokopakedi.controller.User;
 import com.enigma.tokopakedi.entity.Customer;
+import com.enigma.tokopakedi.entity.Merchant;
 import com.enigma.tokopakedi.entity.Role;
 import com.enigma.tokopakedi.entity.UserCredential;
+import com.enigma.tokopakedi.model.reponse.MerchantResponse;
 import com.enigma.tokopakedi.model.reponse.RoleResponse;
 import com.enigma.tokopakedi.model.request.AuthRequest;
 import com.enigma.tokopakedi.model.reponse.UserResponse;
@@ -12,6 +14,7 @@ import com.enigma.tokopakedi.repository.UserCredentialRepository;
 import com.enigma.tokopakedi.security.JwtUtils;
 import com.enigma.tokopakedi.service.AuthService;
 import com.enigma.tokopakedi.service.CustomerService;
+import com.enigma.tokopakedi.service.MerchantService;
 import com.enigma.tokopakedi.service.RoleService;
 import com.enigma.tokopakedi.utils.ValidationUtils;
 import jakarta.annotation.PostConstruct;
@@ -38,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
     private final CustomerService customerService;
+    private final MerchantService merchantService;
     private final ValidationUtils validationUtils;
 
     @Override
@@ -122,10 +126,10 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         userCredentialRepository.saveAndFlush(userCredential);
 
-        Customer customer = Customer.builder()
+        Merchant merchant = Merchant.builder()
                 .userCredential(userCredential)
                 .build();
-        customerService.createCustomer(customer);
+        merchantService.createNewMerchant(merchant);
 
         return toUserResponse(userCredential);
     }

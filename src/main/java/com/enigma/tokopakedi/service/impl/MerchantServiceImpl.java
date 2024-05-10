@@ -94,4 +94,9 @@ public class MerchantServiceImpl implements MerchantService {
         merchantRepository.deleteById(id);
         return "Merchant deleted";
     }
+
+    @Override
+    public Merchant createNewMerchant(Merchant merchant) {
+        return merchantRepository.save(merchant);
+    }
 }
