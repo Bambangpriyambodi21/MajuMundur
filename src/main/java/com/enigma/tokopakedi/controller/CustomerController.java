@@ -4,6 +4,7 @@ import com.enigma.tokopakedi.entity.Customer;
 import com.enigma.tokopakedi.model.reponse.CustomerResponse;
 import com.enigma.tokopakedi.model.reponse.PagingResponse;
 import com.enigma.tokopakedi.model.reponse.WebResponse;
+import com.enigma.tokopakedi.model.request.CustomerRequest;
 import com.enigma.tokopakedi.model.request.SearchCustomerRequest;
 import com.enigma.tokopakedi.service.CustomerService;
 import org.springframework.data.domain.Page;
@@ -117,7 +118,7 @@ public class CustomerController {
     //TRAINER
     // Update
     @PutMapping(path = "/customers")
-    public ResponseEntity<?> updateCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<?> updateCustomer(@RequestBody CustomerRequest customer) {
         CustomerResponse customer1 = customerService.updateCustomer(customer);
         WebResponse<CustomerResponse> response = WebResponse.<CustomerResponse>builder()
                 .message("Succesfully edit Customer")
@@ -129,11 +130,9 @@ public class CustomerController {
 
     // Delete By Id
     @DeleteMapping(path = "/customers/{id}")
-    public String deleteCustomerById(@PathVariable String id) {
-//        Optional<Customer> optionalCustomer = customerRepository.findById(id);
-//        if (optionalCustomer.isEmpty()) throw new RuntimeException("customer not found");
-//        customerRepository.delete(optionalCustomer.get());
-        return "OK";
+    public ResponseEntity<?> deleteCustomerById(@PathVariable String id) {
+        String string = customerService.deleteByIdCustomer(id);
+        return ResponseEntity.status(HttpStatus.OK).body(string);
     }
 
 }

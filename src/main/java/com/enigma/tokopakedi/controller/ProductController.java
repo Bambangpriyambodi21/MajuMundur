@@ -146,7 +146,7 @@ public class ProductController {
     }
 
     // Delete By Id
-    @DeleteMapping(path = "/products")
+    @DeleteMapping(path = "/products/{id}")
     public String deleteCustomerById(@PathVariable String id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) throw new RuntimeException("customer not found");
