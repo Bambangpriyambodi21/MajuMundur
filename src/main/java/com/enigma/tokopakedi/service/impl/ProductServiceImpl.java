@@ -6,6 +6,7 @@ import com.enigma.tokopakedi.model.request.SearchProductRequest;
 import com.enigma.tokopakedi.repository.ProductRepository;
 import com.enigma.tokopakedi.service.ProductService;
 import jakarta.persistence.criteria.Predicate;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,13 +20,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     @Override
     public void deleteByIdProduct(String id){
@@ -36,47 +34,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product readIdProduct(String productId) {
-//        Product product = new Product();
-//        product.setId(productId);
         Optional<Product> optionalProduct = productRepository.findById(productId);
         if (optionalProduct.isPresent()) return optionalProduct.get();
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "product not found");
-    }
-
-
-    @Override
-    public ProductResponse readIdByProduct(String productId) {
-//        Product product = new Product();
-//        product.setId(productId);
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-
-        ProductResponse productResponse = ProductResponse.builder()
-                .id(optionalProduct.get().getId())
-                .name(optionalProduct.get().getName())
-                .stock(optionalProduct.get().getStock())
-                .price(optionalProduct.get().getPrice())
-                .build();
-
-        if (optionalProduct.isPresent()) return productResponse;
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "product not found");
-    }
-
-    @Override
-    public ProductResponse createNewProduct(String productId, Product product) {
-        product.setId(productId);
-//        Optional<Product> optionalProduct = productRepository.findById(productId);
-//        if (optionalProduct.isEmpty()) throw new ResponseStatusException(HttpStatusCode.valueOf())
-
-        Product products = productRepository.save(product);
-
-        ProductResponse productResponse = ProductResponse.builder()
-                .id(products.getId())
-                .name(products.getName())
-                .stock(products.getStock())
-                .price(products.getPrice())
-                .build();
-
-        return productResponse;
     }
 
     @Override
@@ -109,54 +69,6 @@ public class ProductServiceImpl implements ProductService {
                     .build();
 
         return productResponse;
-    }
-
-    public Page<Product> findAllWithPagination(int page, int size) {
-        PageRequest pageable = PageRequest.of(page, size);
-        return productRepository.findAll(pageable);
-    }
-
-    @Override
-    public List<Product> findAllWithParam(String param, int price) {
-        Specification<Product> productSpecification = (root, query, criteriaBuilder) -> {
-            return query.where(
-                    criteriaBuilder.or(
-                            criteriaBuilder.equal(root.get("name"), param),
-                            criteriaBuilder.equal(root.get("price"), price)
-                    )
-            ).getRestriction();
-        };
-
-        List<Product> products = productRepository.findAll(productSpecification);
-        return products;
-    }
-
-    @Override
-    public List<Product> createBulkProducts(List<Product> products) {
-        return productRepository.saveAll(products);
-    }
-
-    @Override
-    public Page<Product> getAll(SearchProductRequest request) {
-        if (request.getPage()<=0)request.setPage(1);
-        PageRequest pageable = PageRequest.of(request.getPage()-1, request.getSize());
-        Specification<Product> productSpecification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            if (request.getName()!= null){
-                Predicate namePredicate = criteriaBuilder.like(root.get("name"), "%"+request.getName()+"%");
-                predicates.add(namePredicate);
-            }
-            if (request.getMinPrice()!= null){
-                Predicate namePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("price"), request.getMinPrice());
-                predicates.add(namePredicate);
-            }
-            if (request.getMaxprice()!= null){
-                Predicate namePredicate = criteriaBuilder.lessThanOrEqualTo(root.get("price"), request.getMaxprice());
-                predicates.add(namePredicate);
-            }
-            return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
-        };
-        return productRepository.findAll(productSpecification, pageable);
     }
 
     @Override

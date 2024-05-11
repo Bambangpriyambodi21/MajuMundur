@@ -19,12 +19,13 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(path = "/product")
 public class ProductController {
 
     private final ProductService productService;
     private final ProductRepository productRepository;
 
-    @PostMapping(path = "/product")
+    @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
     public ResponseEntity<?> createProduct(@RequestBody Product product){
         ProductResponse newProduct = productService.createProduct(product);
@@ -37,7 +38,7 @@ public class ProductController {
 
     }
 
-    @GetMapping(path = "/product")
+    @GetMapping
     public ResponseEntity<?> getProduct(){
         List<ProductResponse> products = productService.getProduct();
         WebResponse<List<ProductResponse>> response = WebResponse.<List<ProductResponse>>builder()
@@ -48,19 +49,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping(path = "/product/{productId}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
-    public ResponseEntity<?> createNewProduct(@PathVariable String productId, @RequestBody Product product){
-        ProductResponse product1 =productService.createNewProduct(productId, product);
-        WebResponse<ProductResponse> response = WebResponse.<ProductResponse>builder()
-                .message("Succesfully get all product")
-                .status(HttpStatus.OK.getReasonPhrase())
-                .data(product1)
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping(path = "/product/{productId}")
+    @DeleteMapping(path = "/{productId}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
     public ResponseEntity<?> delete(@PathVariable String productId){
         productService.deleteByIdProduct(productId);
@@ -72,7 +61,8 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping(path = "/products")
+    @PutMapping
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
     public Product updateCustomer(@RequestBody Product product) {
         Optional<Product> optionalProduct = productRepository.findById(product.getId());
         if (optionalProduct.isEmpty()) throw new RuntimeException("customer not found");
