@@ -103,13 +103,12 @@ public class CustomerServiceImpl implements CustomerService {
                 .address(customer.get(i).getAddress())
                 .phone(customer.get(i).getPhone())
                 .poin(customer.get(i).getPoin())
+                .reward(customer.get(i).getReward())
                 .userCredential(userCredentialResponses.get(i))
                 .build();
         customerResponses.add(customerResponse);
 
-//            log.info(String.valueOf(userCredentialResponses.get(i).getEmail()));
         }
-        log.info(customerResponses.toString());
         return customerResponses;
     }
 

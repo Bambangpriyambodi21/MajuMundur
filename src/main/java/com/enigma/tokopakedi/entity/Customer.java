@@ -19,6 +19,7 @@ public class Customer {
     private String address;
     private String phone;
     private Integer poin;
+    private String reward;
 
     @OneToOne
     private UserCredential userCredential;

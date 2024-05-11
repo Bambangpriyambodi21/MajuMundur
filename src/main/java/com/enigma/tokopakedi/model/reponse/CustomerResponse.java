@@ -17,5 +17,6 @@ public class CustomerResponse<T> {
     private String address;
     private String phone;
     private Integer poin;
+    private String reward;
     private T userCredential;
 }

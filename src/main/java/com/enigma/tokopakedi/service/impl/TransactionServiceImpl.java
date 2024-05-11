@@ -45,15 +45,23 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TransactionResponse createTransactions(TransactionRequest request) {
+        String reward = "";
+
         Customer customer = customerService.findId(request.getCustomerId());
+        if (customer.getPoin()==null) customer.setPoin(0);
+        if (customer.getPoin()==19) reward="Reward A";
+        else if (customer.getPoin()==39) reward="Reward B";
+
         Customer customer1 = Customer.builder()
                 .id(request.getCustomerId())
                 .name(customer.getName())
                 .phone(customer.getPhone())
                 .address(customer.getAddress())
                 .poin(customer.getPoin()+1)
+                .reward(reward)
                 .userCredential(customer.getUserCredential())
                 .build();
+
         customerService.createCustomer(customer1);
 
         Transaction transaction = Transaction.builder()
@@ -93,7 +101,6 @@ public class TransactionServiceImpl implements TransactionService {
             orderDetailsa.add(transactionDetailResponse);
         }
 
-//        order.setOrderDetails(orderDetails);
         TransactionResponse transactionResponse = TransactionResponse.builder()
                 .id(transaction.getId())
                 .customerId(transaction.getCustomer().getId())
@@ -106,8 +113,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionResponse> getAll(SearchTransactionRequest orderRequest) {
-        if (orderRequest.getPage()<=0)orderRequest.setPage(1);
-        PageRequest pageable = PageRequest.of(orderRequest.getPage(), orderRequest.getSize());
 
         List<Transaction> all = transactionRepository.findAll();
         List<TransactionResponse> transactionResponses = all.stream()

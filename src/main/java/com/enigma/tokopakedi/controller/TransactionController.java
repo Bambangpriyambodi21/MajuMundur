@@ -24,7 +24,6 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
     public ResponseEntity<?> createNewTransactions(@RequestBody TransactionRequest request){
 
         TransactionResponse transaction = transactionService.createTransactions(request);
@@ -39,7 +38,6 @@ public class TransactionController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
     public ResponseEntity<?> getAll(@RequestParam(required = false, defaultValue = "1") Integer page,
                               @RequestParam(required = false, defaultValue = "1") Integer size){
         SearchTransactionRequest orderRequest = SearchTransactionRequest.builder()
@@ -57,7 +55,6 @@ public class TransactionController {
     }
 
     @DeleteMapping(path = "/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
     public ResponseEntity<?> delete(@PathVariable String id){
         String delete = transactionService.delete(id);
 
@@ -70,7 +67,6 @@ public class TransactionController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
     public ResponseEntity update(@RequestBody TransactionRequest request){
         TransactionResponse update = transactionService.update(request);
         WebResponse<TransactionResponse> response = WebResponse.<TransactionResponse>builder()
