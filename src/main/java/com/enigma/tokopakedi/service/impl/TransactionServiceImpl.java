@@ -4,6 +4,7 @@ import com.enigma.tokopakedi.entity.Customer;
 import com.enigma.tokopakedi.entity.Transaction;
 import com.enigma.tokopakedi.entity.TransactionDetail;
 import com.enigma.tokopakedi.entity.Product;
+import com.enigma.tokopakedi.model.reponse.CustomerResponse;
 import com.enigma.tokopakedi.model.reponse.TransactionDetailResponse;
 import com.enigma.tokopakedi.model.reponse.TransactionResponse;
 import com.enigma.tokopakedi.model.request.TransactionDetailRequest;
@@ -40,9 +41,6 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionDetailService transactionDetailService;
     private final CustomerService customerService;
     private final ProductService productService;
-    private final ProductRepository productRepository;
-
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -202,5 +200,18 @@ public class TransactionServiceImpl implements TransactionService {
                 .build();
 
         return transactionResponse;
+    }
+
+    @Override
+    public List<CustomerResponse> listCustomer() {
+        List<Transaction> all = transactionRepository.findAll();
+
+        List<CustomerResponse> customerResponses = new ArrayList<>();
+        for (int i=0;i<all.size();i++){
+            CustomerResponse id = customerService.readIdByCustomer(all.get(i).getCustomer().getId());
+
+            customerResponses.add(id);
+        }
+        return customerResponses;
     }
 }

@@ -1,6 +1,7 @@
 package com.enigma.tokopakedi.controller;
 
 import com.enigma.tokopakedi.entity.Transaction;
+import com.enigma.tokopakedi.model.reponse.CustomerResponse;
 import com.enigma.tokopakedi.model.reponse.TransactionResponse;
 import com.enigma.tokopakedi.model.reponse.PagingResponse;
 import com.enigma.tokopakedi.model.reponse.WebResponse;
@@ -44,7 +45,7 @@ public class TransactionController {
 
         WebResponse<TransactionResponse> response = WebResponse.<TransactionResponse>builder()
                 .status(HttpStatus.OK.getReasonPhrase())
-                .message("Successfully get all transaction")
+                .message("Successfully get id transaction")
                 .data(order)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -75,7 +76,7 @@ public class TransactionController {
 
         WebResponse<String> response = WebResponse.<String>builder()
                 .status(HttpStatus.OK.getReasonPhrase())
-                .message("Successfully get all transaction")
+                .message("Successfully delete transaction")
                 .data(delete)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -87,8 +88,19 @@ public class TransactionController {
         TransactionResponse update = transactionService.update(request);
         WebResponse<TransactionResponse> response = WebResponse.<TransactionResponse>builder()
                 .status(HttpStatus.CREATED.getReasonPhrase())
-                .message("Succesfully create new transaction")
+                .message("Succesfully update transaction")
                 .data(update)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping(path = "/listCustomer")
+    public ResponseEntity<?> listCustomer(){
+        List<CustomerResponse> customerResponses = transactionService.listCustomer();
+        WebResponse<List<CustomerResponse>> response = WebResponse.<List<CustomerResponse>>builder()
+                .status(HttpStatus.CREATED.getReasonPhrase())
+                .message("Succesfully get all customer transaction")
+                .data(customerResponses)
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

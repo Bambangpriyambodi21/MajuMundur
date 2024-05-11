@@ -102,6 +102,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .name(customer.get(i).getName())
                 .address(customer.get(i).getAddress())
                 .phone(customer.get(i).getPhone())
+                .poin(customer.get(i).getPoin())
                 .userCredential(userCredentialResponses.get(i))
                 .build();
         customerResponses.add(customerResponse);
@@ -132,35 +133,6 @@ public class CustomerServiceImpl implements CustomerService {
         userService.delete(byId.get().getUserCredential().getId());
         customerRepository.deleteById(customerId);
         return "Data customer deleted";
-    }
-
-    public Page<Customer> findAllWithPagination(int page, int size) {
-        PageRequest pageable = PageRequest.of(page, size);
-        return customerRepository.findAll(pageable);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Page<Customer> findAllWithParamm(SearchCustomerRequest request) {
-        if (request.getPage()<=0)request.setPage(1);
-        PageRequest pageablee = PageRequest.of(request.getPage()-1, request.getSize());
-        Specification<Customer> productSpecificationn = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            if (request.getName()!= null || request.getPhone()!= null){
-                Predicate namePredicate = criteriaBuilder.or(
-                        criteriaBuilder.like(root.get("name"), "%"+request.getName()+"%"),
-                        criteriaBuilder.like(root.get("phone"), "%"+request.getPhone()+"%")
-                );
-                predicates.add(namePredicate);
-            }
-//            if (request.getPhone()!= null){
-//                Predicate namePredicate = criteriaBuilder.like(root.get("phone"), "%"+request.getPhone()+"%");
-//                predicates.add(namePredicate);
-//            }
-            return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
-        };
-
-        return customerRepository.findAll(productSpecificationn, pageablee);
     }
 
     @Override

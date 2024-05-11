@@ -9,14 +9,10 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface CustomerService {
-
-
     String deleteByIdCustomer(String customerId);
     CustomerResponse readIdByCustomer(String customerId);
     Customer findId(String CustomerId);
     List<CustomerResponse> getCustomer();
     Customer createCustomer(Customer Customer);
-    Page<Customer> findAllWithPagination(int page, int size);
-    Page<Customer> findAllWithParamm(SearchCustomerRequest request);
     CustomerResponse updateCustomer(CustomerRequest customer);
 }
