@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,16 +50,15 @@ public class MerchantServiceImpl implements MerchantService {
     public List<MerchantResponse> getAll() {
         List<Merchant> all = merchantRepository.findAll();
 
-        List<MerchantResponse> merchantResponses = new ArrayList<>();
-        for (int i = 0; i<all.size();i++){
-            MerchantResponse merchantResponse = MerchantResponse.builder()
-                    .id(all.get(i).getId())
-                    .name(all.get(i).getName())
-                    .location(all.get(i).getLocation())
-                    .user_credential(all.get(i).getUserCredential().getId())
-                    .build();
-            merchantResponses.add(merchantResponse);
-        }
+        List<MerchantResponse> merchantResponses = all.stream()
+                .map(item -> MerchantResponse.builder()
+                        .id(item.getId())
+                        .name(item.getName())
+                        .location(item.getLocation())
+                        .user_credential(item.getUserCredential().getId())
+                        .build())
+                .collect(Collectors.toList());
+
         return merchantResponses;
 
     }

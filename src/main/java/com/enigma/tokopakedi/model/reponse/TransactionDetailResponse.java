@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDetailResponse {
+public class TransactionDetailResponse {
     private String id;
     private String orderId;
     private Product product;

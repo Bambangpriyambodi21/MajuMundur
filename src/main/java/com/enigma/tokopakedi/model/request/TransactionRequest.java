@@ -1,6 +1,5 @@
 package com.enigma.tokopakedi.model.request;
 
-import com.enigma.tokopakedi.model.request.OrderDetailRequest;
 import lombok.*;
 
 import java.util.List;
@@ -10,7 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderRequest {
+public class TransactionRequest {
+    private String id;
     private String customerId;
-    private List<OrderDetailRequest> orderDetails;
+    private List<TransactionDetailRequest> orderDetails;
 }
