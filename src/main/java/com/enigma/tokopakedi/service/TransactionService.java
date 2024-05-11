@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface TransactionService {
     TransactionResponse createTransactions(TransactionRequest request);
-    TransactionResponse getById(String id);
     List<TransactionResponse> getAll(SearchTransactionRequest orderRequest);
     String delete(String id);
     TransactionResponse update(TransactionRequest request);

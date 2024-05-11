@@ -105,18 +105,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionResponse getById(String id) {
-        Transaction transaction = transactionRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found"));
-        TransactionResponse transactionResponse = TransactionResponse.builder()
-                .id(transaction.getId())
-                .customerId(transaction.getCustomer().getId())
-                .transDate(transaction.getDate())
-                .orderDetails(transaction)
-                .build();
-        return transactionResponse;
-    }
-
-    @Override
     public List<TransactionResponse> getAll(SearchTransactionRequest orderRequest) {
         if (orderRequest.getPage()<=0)orderRequest.setPage(1);
         PageRequest pageable = PageRequest.of(orderRequest.getPage(), orderRequest.getSize());

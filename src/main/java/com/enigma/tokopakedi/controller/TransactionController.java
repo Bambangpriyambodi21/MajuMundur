@@ -38,19 +38,6 @@ public class TransactionController {
 
     }
 
-    @GetMapping(path = "/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
-    public ResponseEntity<?> getById(@PathVariable String id){
-        TransactionResponse order = transactionService.getById(id);
-
-        WebResponse<TransactionResponse> response = WebResponse.<TransactionResponse>builder()
-                .status(HttpStatus.OK.getReasonPhrase())
-                .message("Successfully get id transaction")
-                .data(order)
-                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
     @GetMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'MERCHANT')")
     public ResponseEntity<?> getAll(@RequestParam(required = false, defaultValue = "1") Integer page,
