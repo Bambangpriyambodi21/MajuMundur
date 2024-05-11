@@ -44,10 +44,10 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping(path = "/customer/{customerId}")
-    public ResponseEntity<?> createNewCustomer(@PathVariable String customerId, @RequestBody Customer customer){
-        Customer customer1 = customerService.createNewCustomer(customerId, customer);
-        WebResponse<Customer> response = WebResponse.<Customer>builder()
+    @PutMapping(path = "/customer")
+    public ResponseEntity<?> createNewCustomer(@RequestBody CustomerRequest customer){
+        CustomerResponse customer1 = customerService.updateCustomer(customer);
+        WebResponse<CustomerResponse> response = WebResponse.<CustomerResponse>builder()
                 .message("Succesfully update customer")
                 .status(HttpStatus.OK.getReasonPhrase())
                 .data(customer1)

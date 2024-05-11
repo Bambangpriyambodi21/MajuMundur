@@ -67,9 +67,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Customer createNewCustomer(String customerId, Customer customer) {
-        customer.setId(customerId);
-        return customerRepository.save(customer);
+    public Customer findId(String customerId) {
+        Optional<Customer> byId = customerRepository.findById(customerId);
+        Customer customer = Customer.builder()
+                .id(byId.get().getId())
+                .name(byId.get().getName())
+                .userCredential(byId.get().getUserCredential())
+                .phone(byId.get().getPhone())
+                .address(byId.get().getAddress())
+                .poin(byId.get().getPoin())
+                .build();
+        return customer;
     }
 
     @Override
@@ -113,8 +121,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String deleteByIdCustomer(String customerId){
+
         Optional<Customer> byId = customerRepository.findById(customerId);
         if (byId.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        UserCredential currentUserCredential = (UserCredential) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserCredential userCredential = userService.loadByUserId(byId.get().getUserCredential().getId());
+        if (!currentUserCredential.getId().equals(userCredential.getId())) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "forbidden");
+
         userService.delete(byId.get().getUserCredential().getId());
         customerRepository.deleteById(customerId);
         return "Data customer deleted";

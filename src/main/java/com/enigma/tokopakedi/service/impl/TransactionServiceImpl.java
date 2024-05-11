@@ -47,10 +47,16 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TransactionResponse createTransactions(TransactionRequest request) {
-//        Customer customer = customerService.readIdByCustomer(request.getCustomerId());
+        Customer customer = customerService.findId(request.getCustomerId());
         Customer customer1 = Customer.builder()
                 .id(request.getCustomerId())
+                .name(customer.getName())
+                .phone(customer.getPhone())
+                .address(customer.getAddress())
+                .poin(customer.getPoin()+1)
+                .userCredential(customer.getUserCredential())
                 .build();
+        customerService.createCustomer(customer1);
 
         Transaction transaction = Transaction.builder()
                 .customer(customer1)

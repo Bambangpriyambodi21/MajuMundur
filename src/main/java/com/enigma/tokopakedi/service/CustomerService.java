@@ -13,7 +13,7 @@ public interface CustomerService {
 
     String deleteByIdCustomer(String customerId);
     CustomerResponse readIdByCustomer(String customerId);
-    Customer createNewCustomer(String CustomerId, Customer Customer);
+    Customer findId(String CustomerId);
     List<CustomerResponse> getCustomer();
     Customer createCustomer(Customer Customer);
     Page<Customer> findAllWithPagination(int page, int size);
