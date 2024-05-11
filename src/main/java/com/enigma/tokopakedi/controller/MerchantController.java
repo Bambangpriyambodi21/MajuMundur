@@ -18,17 +18,6 @@ import java.util.List;
 public class MerchantController {
     private final MerchantService merchantService;
 
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody MerchantRequest merchant){
-        MerchantResponse merchant1 = merchantService.create(merchant);
-        WebResponse<MerchantResponse> response = WebResponse.<MerchantResponse>builder()
-                .message("Data created")
-                .status(HttpStatus.CREATED.getReasonPhrase())
-                .data(merchant1)
-                .build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @GetMapping
     public ResponseEntity<?> getAll(){
         List<MerchantResponse> all = merchantService.getAll();
